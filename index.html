@@ -870,16 +870,16 @@
         </div>
     </div>
 
-    <!-- INTERAKTIVES ZEITREISE & SIMULATIONS-HUD (OHNE PRESETS) -->
+    <!-- CHRONOMETRISCHE EPOCHEN- & EPHEMERIDENSIMULATION -->
     <div class="sim-panel">
         <div class="sim-header">
             <div class="sim-title">
-                <span>⏱️ Zeitreise & Synchronisations-Simulator</span>
+                <span>⏱️ Chronometrische Epochen- & Ephemeridensimulation</span>
                 <span id="sim-status-indicator" style="font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; background: rgba(0,245,160,0.15); color: var(--emerald); border: 1px solid var(--emerald);">LIVE ECHTZEIT</span>
             </div>
             <div class="mode-toggle">
-                <button class="mode-btn active" id="btn-mode-live">LIVE MODUS</button>
-                <button class="mode-btn" id="btn-mode-sim">SIMULATOR / ZEITREISE</button>
+                <button class="mode-btn active" id="btn-mode-live">ECHTZEIT-MODUS (LIVE)</button>
+                <button class="mode-btn" id="btn-mode-sim">MANUELLE SIMULATION (EPOCHE)</button>
             </div>
         </div>
 
@@ -890,12 +890,12 @@
                 <select id="sim-ref-category">
                     <option value="utc-zone" selected>Zonenzeit (Aus allen UTC-Zonen)</option>
                     <option value="custom-meridian">Frei definierter Längengrad (&lambda; MOZ)</option>
-                    <option value="user-zone">Eigener Standort: Zonenzeit</option>
-                    <option value="user-moz">Eigener Standort: Mittlere Ortszeit (MOZ)</option>
-                    <option value="user-woz">Eigener Standort: Wahre Ortszeit (WOZ)</option>
-                    <option value="table-zone">Tabelle: Zonenzeit</option>
-                    <option value="table-moz">Tabelle: Mittlere Ortszeit (MOZ)</option>
-                    <option value="table-woz">Tabelle: Wahre Ortszeit (WOZ)</option>
+                    <option value="user-zone">Referenzstation: Zonenzeit</option>
+                    <option value="user-moz">Referenzstation: Mittlere Ortszeit (MOZ)</option>
+                    <option value="user-woz">Referenzstation: Wahre Ortszeit (WOZ)</option>
+                    <option value="table-zone">Matrix-Station: Zonenzeit</option>
+                    <option value="table-moz">Matrix-Station: Mittlere Ortszeit (MOZ)</option>
+                    <option value="table-woz">Matrix-Station: Wahre Ortszeit (WOZ)</option>
                 </select>
             </div>
 
@@ -903,13 +903,13 @@
             <div class="control-group" id="sim-dynamic-param-group">
                 <label id="sim-dynamic-param-label">Zugehörige UTC-Zeitzone</label>
                 <select id="sim-ref-zone-select"></select>
-                <input type="number" id="sim-ref-meridian-input" step="0.0000001" min="-180" max="180" value="0.000000" style="display: none;" placeholder="Längengrad in Dezimalgrad">
+                <input type="number" id="sim-ref-meridian-input" step="0.0000001" min="-180" max="180" value="" style="display: none;">
                 <select id="sim-ref-table-select" style="display: none;"></select>
             </div>
 
             <div class="control-group">
-                <label>2. Gewählte Uhrzeit (HH:MM:SS)</label>
-                <input type="text" id="sim-time-input" value="12:00:00" placeholder="12:00:00.00">
+                <label>2. Gewählte Epochenzeit (HH:MM:SS)</label>
+                <input type="text" id="sim-time-input" value="">
             </div>
 
             <div class="control-group">
@@ -928,13 +928,13 @@
         </div>
     </div>
 
-    <!-- MERIDIAN-GENERATOR & GEODÄTISCHER DMS-WANDLER -->
+    <!-- GEODÄTISCHER KOORDINATENTRANSFORMATOR (DMS ⇄ DEZIMALGRAD) -->
     <div class="card">
         <div class="card-header">
-            <h2>📐 Geodätischer Meridian-Generator & DMS-Wandler</h2>
+            <h2>📐 Geodätischer Koordinatentransformator &amp; DMS-Konverter</h2>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button class="btn btn-outline" id="btn-gen-add-table" title="Diesen Meridian als neuen Ort in die Vergleichstabelle eintragen">➕ In Tabelle anlegen</button>
-                <button class="btn btn-outline" id="btn-gen-apply-sim" title="Diesen Längengrad in die Simulation als Referenz-Meridian laden">⏱️ In Simulator</button>
+                <button class="btn btn-outline" id="btn-gen-add-table" title="Diesen Meridian als Station in die Vergleichsmatrix eintragen">➕ In Matrix anlegen</button>
+                <button class="btn btn-outline" id="btn-gen-apply-sim" title="Diesen Längengrad als Bezugsmeridian in die Epochensimulation laden">⏱️ In Simulation</button>
             </div>
         </div>
 
@@ -942,24 +942,24 @@
             <!-- DMS SEKTION -->
             <div class="gen-box">
                 <div class="gen-box-title">
-                    <span>1. Sexagesimal (Grad / Minuten / Sekunden)</span>
-                    <button class="btn-icon" id="btn-copy-dms" title="DMS Text kopieren">📋</button>
+                    <span>1. Sexagesimalsystem (Grad · Bogenminuten · Bogensekunden)</span>
+                    <button class="btn-icon" id="btn-copy-dms" title="Sexagesimalwert kopieren">📋</button>
                 </div>
                 <div class="dms-inputs">
                     <div class="control-group">
                         <label>Grad (°)</label>
-                        <input type="number" id="gen-dms-deg" min="0" max="180" step="1" value="13">
+                        <input type="number" id="gen-dms-deg" min="0" max="180" step="1" value="">
                     </div>
                     <div class="control-group">
                         <label>Minuten (')</label>
-                        <input type="number" id="gen-dms-min" min="0" max="59" step="1" value="24">
+                        <input type="number" id="gen-dms-min" min="0" max="59" step="1" value="">
                     </div>
                     <div class="control-group">
-                        <label>Sekunden ('') [bis .00]</label>
-                        <input type="number" id="gen-dms-sec" min="0" max="59.99" step="0.01" value="15.67">
+                        <label>Sekunden ('')</label>
+                        <input type="number" id="gen-dms-sec" min="0" max="59.99" step="0.01" value="">
                     </div>
                     <div class="control-group">
-                        <label>Richtung</label>
+                        <label>Hemisphäre</label>
                         <select id="gen-dms-dir">
                             <option value="E" selected>E (Ost +)</option>
                             <option value="W">W (West -)</option>
@@ -967,55 +967,55 @@
                     </div>
                 </div>
                 <div style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);" id="gen-dms-formatted-preview">
-                    Formatiert: 13° 24' 15.67" E
+                    Sexagesimal: --
                 </div>
             </div>
 
             <!-- SYNC ICON -->
             <div class="gen-sync-icon">⇄</div>
 
-            <!-- DEZIMAL SEKTION (BIS 7 NACHKOMMASTELLEN) -->
+            <!-- DEZIMAL SEKTION -->
             <div class="gen-box">
                 <div class="gen-box-title">
-                    <span>2. Dezimalgrad (&lambda; bis 7 Nachkommastellen)</span>
+                    <span>2. Geographische Länge &lambda; (Dezimalgrad bis 7 Stellen)</span>
                     <button class="btn-icon" id="btn-copy-dec" title="Dezimalwert kopieren">📋</button>
                 </div>
                 <div class="control-group">
                     <label>Dezimaler Längengrad (-180.0000000° bis +180.0000000°)</label>
-                    <input type="number" id="gen-dec-input" step="0.0000001" min="-180" max="180" value="13.4043528">
+                    <input type="number" id="gen-dec-input" step="0.0000001" min="-180" max="180" value="">
                 </div>
                 <div style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);" id="gen-dec-formatted-preview">
-                    Zeitversatz zu UTC: +00:53:37.04 (4 min pro 1°)
+                    Winkelzeitversatz zu UTC: -- (4 min pro 1°)
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- NULLMERIDIAN-KONVERTER (GEODÄTISCHE TRANSFORMATION) -->
+    <!-- GEODÄTISCHE BEZUGSMERIDIAN-TRANSFORMATION (NULLMERIDIAN-REDUKTION) -->
     <div class="card">
         <div class="card-header">
             <div>
-                <h2>🌐 Relativer Nullmeridian-Konverter (Bezugstransformation)</h2>
-                <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 3px;">Definiere jeden Längengrad der Erde als 0°-Nullmeridian und wandle beliebige Koordinaten bidirektional um.</p>
+                <h2>🌐 Geodätische Bezugsmeridian-Transformation (Nullmeridian-Reduktion)</h2>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 3px;">Transformation geographischer Längen bezogen auf einen frei wählbaren Referenzmeridian (&lambda;<sub>0</sub>) gegenüber dem IERS-Referenzmeridian (Greenwich).</p>
             </div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button class="btn btn-outline" id="btn-nm-set-greenwich" title="Setzt den Nullmeridian auf den Standard Greenwich Nullmeridian (0.000000°)">🇬🇧 Greenwich (0°)</button>
-                <button class="btn btn-outline" id="btn-nm-set-user" title="Übernimmt den Längengrad deines eigenen Beobachtungspunktes">📍 Eigener Ort</button>
-                <button class="btn btn-outline" id="btn-nm-set-fav" title="Übernimmt den Längengrad des markierten Favoriten aus der Tabelle">★ Favorit</button>
+                <button class="btn btn-outline" id="btn-nm-set-greenwich" title="Setzt den Referenzmeridian auf den IERS-Nullmeridian (0.000000°)">🇬🇧 IERS Nullmeridian (0°)</button>
+                <button class="btn btn-outline" id="btn-nm-set-user" title="Übernimmt die geographische Länge der Referenzstation">📍 Referenzstation</button>
+                <button class="btn btn-outline" id="btn-nm-set-fav" title="Übernimmt die geographische Länge des markierten Favoriten">★ Referenz-Favorit</button>
             </div>
         </div>
 
-        <!-- DEFINITION DES NEUEN NULLMERIDIANS -->
+        <!-- DEFINITION DES GEODÄTISCHEN NULLMERIDIANS -->
         <div style="background: rgba(8, 13, 26, 0.7); border: 1px solid var(--border-bright); border-radius: 12px; padding: 14px 18px; display: flex; flex-direction: column; gap: 8px;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                 <label style="font-family: var(--font-display); font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gold);">
-                    🎯 Aktiver Nullmeridian (&lambda;<sub>0</sub> im Greenwich-System):
+                    🎯 Definierter Referenzmeridian (&lambda;<sub>0</sub> bezogen auf IERS/Greenwich):
                 </label>
-                <span id="nm-ref-dms-preview" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--cyan);">0° 00' 00.00" (Nullmeridian)</span>
+                <span id="nm-ref-dms-preview" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--cyan);">--</span>
             </div>
             <div style="display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;">
-                <input type="number" id="nm-ref-lon" step="0.000001" min="-180" max="180" value="0.000000" style="font-size: 1rem; font-weight: 700; color: var(--gold); border-color: rgba(255, 183, 3, 0.4);">
-                <button class="btn btn-icon" id="btn-copy-nm-ref" title="Nullmeridian kopieren" style="padding: 8px 12px;">📋 Kopieren</button>
+                <input type="number" id="nm-ref-lon" step="0.000001" min="-180" max="180" value="" style="font-size: 1rem; font-weight: 700; color: var(--gold); border-color: rgba(255, 183, 3, 0.4);">
+                <button class="btn btn-icon" id="btn-copy-nm-ref" title="Referenzmeridian kopieren" style="padding: 8px 12px;">📋 Kopieren</button>
             </div>
         </div>
 
@@ -1024,27 +1024,27 @@
             <!-- RICHTUNG A: GREENWICH -> RELATIV -->
             <div class="converter-panel">
                 <div class="converter-panel-header">
-                    <span>1. Greenwich &rarr; Relativ zu &lambda;<sub>0</sub></span>
+                    <span>1. IERS-Referenzmeridian (Greenwich) &rarr; Relativmeridian (&lambda; &minus; &lambda;<sub>0</sub>)</span>
                     <button class="btn-icon" id="btn-copy-nm-rel-result" title="Relatives Ergebnis kopieren">📋</button>
                 </div>
                 <div class="control-group">
-                    <label>Koordinate in Greenwich (°Dezimal)</label>
-                    <input type="number" id="nm-in-grw" step="0.000001" min="-180" max="180" value="13.404954" placeholder="z. B. 13.404954">
-                    <span id="nm-in-grw-dms-preview" style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono);">DMS: 13° 24' 17.83" E</span>
+                    <label>Geographische Länge bezogen auf IERS/Greenwich (°Dezimal)</label>
+                    <input type="number" id="nm-in-grw" step="0.000001" min="-180" max="180" value="">
+                    <span id="nm-in-grw-dms-preview" style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono);">Sexagesimal: --</span>
                 </div>
 
                 <div class="converter-result-box">
                     <div class="converter-result-item">
-                        <span class="lbl">Relativ zu &lambda;<sub>0</sub> (Dezimal):</span>
-                        <span class="val hl-cyan" id="nm-res-rel-dec">+13.404954°</span>
+                        <span class="lbl">Relativmeridian &Delta;&lambda; (Dezimalgrad):</span>
+                        <span class="val hl-cyan" id="nm-res-rel-dec">--</span>
                     </div>
                     <div class="converter-result-item">
-                        <span class="lbl">Relativ zu &lambda;<sub>0</sub> (Sexagesimal DMS):</span>
-                        <span class="val hl-cyan" id="nm-res-rel-dms">13° 24' 17.83" E</span>
+                        <span class="lbl">Relativmeridian &Delta;&lambda; (Sexagesimal DMS):</span>
+                        <span class="val hl-cyan" id="nm-res-rel-dms">--</span>
                     </div>
                     <div class="converter-result-item">
-                        <span class="lbl">Winkelzeit-Differenz zu &lambda;<sub>0</sub>:</span>
-                        <span class="val hl-emerald" id="nm-res-rel-time">+00:53:37</span>
+                        <span class="lbl">Chronometrischer Versatz zu &lambda;<sub>0</sub>:</span>
+                        <span class="val hl-emerald" id="nm-res-rel-time">--</span>
                     </div>
                 </div>
             </div>
@@ -1052,49 +1052,49 @@
             <!-- RICHTUNG B: RELATIV -> GREENWICH -->
             <div class="converter-panel">
                 <div class="converter-panel-header">
-                    <span>2. Relativ zu &lambda;<sub>0</sub> &rarr; Greenwich</span>
-                    <button class="btn-icon" id="btn-copy-nm-grw-result" title="Greenwich Ergebnis kopieren">📋</button>
+                    <span>2. Relativmeridian (&Delta;&lambda;) &rarr; IERS-Referenzmeridian (Greenwich)</span>
+                    <button class="btn-icon" id="btn-copy-nm-grw-result" title="IERS Ergebnis kopieren">📋</button>
                 </div>
                 <div class="control-group">
-                    <label>Relative Koordinate zu &lambda;<sub>0</sub> (°Dezimal)</label>
-                    <input type="number" id="nm-in-rel" step="0.000001" min="-180" max="180" value="10.000000" placeholder="z. B. 10.000000">
-                    <span id="nm-in-rel-dms-preview" style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono);">DMS: 10° 00' 00.00" E</span>
+                    <label>Relativer Längengrad bezogen auf &lambda;<sub>0</sub> (°Dezimal)</label>
+                    <input type="number" id="nm-in-rel" step="0.000001" min="-180" max="180" value="">
+                    <span id="nm-in-rel-dms-preview" style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono);">Sexagesimal: --</span>
                 </div>
 
                 <div class="converter-result-box">
                     <div class="converter-result-item">
-                        <span class="lbl">Greenwich-Koordinate (Dezimal):</span>
-                        <span class="val hl-gold" id="nm-res-grw-dec">+10.000000°</span>
+                        <span class="lbl">IERS-Länge &lambda; (Dezimalgrad):</span>
+                        <span class="val hl-gold" id="nm-res-grw-dec">--</span>
                     </div>
                     <div class="converter-result-item">
-                        <span class="lbl">Greenwich-Koordinate (DMS):</span>
-                        <span class="val hl-gold" id="nm-res-grw-dms">10° 00' 00.00" E</span>
+                        <span class="lbl">IERS-Länge &lambda; (Sexagesimal DMS):</span>
+                        <span class="val hl-gold" id="nm-res-grw-dms">--</span>
                     </div>
                     <div class="converter-result-item">
-                        <span class="lbl">Winkelzeit-Differenz zu Greenwich:</span>
-                        <span class="val hl-emerald" id="nm-res-grw-time">+00:40:00</span>
+                        <span class="lbl">Chronometrischer Versatz zu IERS/Greenwich:</span>
+                        <span class="val hl-emerald" id="nm-res-grw-time">--</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- EIGENER BEOBACHTUNGSPUNKT -->
+    <!-- TOPOZENTRISCHE REFERENZSTATION (BEOBACHTERSTANDORT) -->
     <div class="card">
         <div class="card-header">
-            <h2>📍 Eigener Beobachtungspunkt</h2>
-            <button class="btn" id="btn-gps">🛰️ GPS Koordinaten (6-stellig)</button>
+            <h2>📍 Topozentrische Referenzstation (Beobachterstandort)</h2>
+            <button class="btn" id="btn-gps">🛰️ GNSS / GPS Ephemeriden (6 Dezimalstellen)</button>
         </div>
 
         <!-- EINGABEN -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px;">
             <div class="control-group">
-                <label>Längengrad (&lambda; in °Ost / °West &ndash; immer 6 Dezimalstellen)</label>
-                <input type="number" id="user-lon" step="0.000001" min="-180" max="180" value="0.000000">
-                <span style="font-size: 0.7rem; color: var(--text-muted);" id="user-lon-hint">0.000000° (Nullmeridian)</span>
+                <label>Geographische Länge (&lambda; in Dezimalgrad [°E / °W])</label>
+                <input type="number" id="user-lon" step="0.000001" min="-180" max="180" value="">
+                <span style="font-size: 0.7rem; color: var(--text-muted);" id="user-lon-hint">--</span>
             </div>
             <div class="control-group">
-                <label>Zugeordnete Zonenzeit</label>
+                <label>Zugeordnete Gesetzliche Zonenzeit</label>
                 <select id="user-offset"></select>
             </div>
         </div>
@@ -1139,22 +1139,22 @@
         </div>
     </div>
 
-    <!-- MULTI-STANDORT VERGLEICHSTABELLE MIT RELATIV-MERIDIAN-ANZEIGE -->
+    <!-- TOPOZENTRISCHE STANDORT- & EPHEMERIDEN-VERGLEICHSMATRIX -->
     <div class="card">
         <div class="card-header">
             <div>
-                <h2>🌐 Standort-Vergleichsliste</h2>
-                <p style="font-size: 0.78rem; color: var(--text-muted);">Nutze <strong>▲ / ▼</strong> zum Ändern der Position und <strong>★</strong> zur Festlegung des 0°-Referenz-Favoriten (alle anderen Punkte berechnen sich relativ zu ihm).</p>
+                <h2>🌐 Topozentrische Standort- &amp; Ephemeriden-Vergleichsmatrix</h2>
+                <p style="font-size: 0.78rem; color: var(--text-muted);">Nutze <strong>▲ / ▼</strong> zur Sequenzierung und <strong>★</strong> zur Definition des Referenzmeridians (alle Stationen berechnen sich relativ zu ihm).</p>
             </div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-                <input type="text" id="loc-search" placeholder="Tabelle filtern..." style="max-width: 180px; padding: 7px 10px; font-size: 0.8rem;">
+                <input type="text" id="loc-search" placeholder="Matrix filtern..." style="max-width: 180px; padding: 7px 10px; font-size: 0.8rem;">
                 <button class="btn btn-outline" id="btn-sort-west-east" title="Sortiert strikt von West nach Ost">🧭 West &rarr; Ost</button>
                 <button class="btn btn-outline" id="btn-sort-alpha" title="Alphabetisch sortieren">🔤 A &rarr; Z</button>
                 <button class="btn btn-outline" id="btn-clear-all">🗑️ Leeren</button>
                 <button class="btn btn-outline" id="btn-export-json">💾 Exportieren</button>
                 <button class="btn btn-outline" id="btn-import-json">📂 Importieren</button>
                 <input type="file" id="file-import" accept=".json" style="display: none;">
-                <button class="btn" id="btn-add-loc">➕ Ort anlegen</button>
+                <button class="btn" id="btn-add-loc">➕ Station anlegen</button>
             </div>
         </div>
 
@@ -1651,21 +1651,36 @@ function updateAll() {
     while (subsolarLon < -180) subsolarLon += 360;
     document.getElementById('tele-subsolar').textContent = formatLongitude(subsolarLon, 6);
 
-    // Eigener Beobachtungspunkt
-    const userLon = parseFloat(document.getElementById('user-lon').value) || 0;
+    // Topozentrische Referenzstation (Beobachterstandort)
+    const userLonRaw = document.getElementById('user-lon').value.trim();
     const userOffset = parseFloat(document.getElementById('user-offset').value) || 0;
-    const userCalc = computeLocation(userLon, userOffset, activeDate);
 
-    document.getElementById('disp-user-zone').textContent = userCalc.zoneTime;
-    document.getElementById('disp-user-day').innerHTML = `Tag: ${userCalc.zoneDay}`;
-    document.getElementById('disp-user-moz').textContent = userCalc.mozTime;
-    document.getElementById('disp-user-woz').textContent = userCalc.wozTime;
-    document.getElementById('disp-user-noon').textContent = userCalc.solarNoon;
-
-    document.getElementById('disp-user-diff-utc').textContent = userCalc.diffMozFromUtcFormatted;
-    document.getElementById('disp-user-diff-moz-zone').textContent = userCalc.diffMozFromZoneFormatted;
-    document.getElementById('disp-user-diff-woz-zone').textContent = userCalc.diffWozFromZoneFormatted;
-    document.getElementById('user-lon-hint').textContent = formatLongitude(userLon, 6);
+    if (userLonRaw === "" || isNaN(parseFloat(userLonRaw))) {
+        // Leerer Zustand: nur Zonenzeit berechnen, ortsabhängige Metriken auf neutral setzen
+        const utcHours = activeDate.getUTCHours() + activeDate.getUTCMinutes() / 60 + activeDate.getUTCSeconds() / 3600 + activeDate.getUTCMilliseconds() / 3600000;
+        const zoneData = formatTimeWithDayOffset(utcHours + userOffset);
+        document.getElementById('disp-user-zone').textContent = zoneData.timeStr;
+        document.getElementById('disp-user-day').innerHTML = `Tag: ${zoneData.dayBadge}`;
+        document.getElementById('disp-user-moz').textContent = "--:--:--";
+        document.getElementById('disp-user-woz').textContent = "--:--:--";
+        document.getElementById('disp-user-noon').textContent = "--:--:--";
+        document.getElementById('disp-user-diff-utc').textContent = "--:--:--";
+        document.getElementById('disp-user-diff-moz-zone').textContent = "--:--:--";
+        document.getElementById('disp-user-diff-woz-zone').textContent = "--:--:--";
+        document.getElementById('user-lon-hint').textContent = "--";
+    } else {
+        const userLon = parseFloat(userLonRaw);
+        const userCalc = computeLocation(userLon, userOffset, activeDate);
+        document.getElementById('disp-user-zone').textContent = userCalc.zoneTime;
+        document.getElementById('disp-user-day').innerHTML = `Tag: ${userCalc.zoneDay}`;
+        document.getElementById('disp-user-moz').textContent = userCalc.mozTime;
+        document.getElementById('disp-user-woz').textContent = userCalc.wozTime;
+        document.getElementById('disp-user-noon').textContent = userCalc.solarNoon;
+        document.getElementById('disp-user-diff-utc').textContent = userCalc.diffMozFromUtcFormatted;
+        document.getElementById('disp-user-diff-moz-zone').textContent = userCalc.diffMozFromZoneFormatted;
+        document.getElementById('disp-user-diff-woz-zone').textContent = userCalc.diffWozFromZoneFormatted;
+        document.getElementById('user-lon-hint').textContent = formatLongitude(userLon, 6);
+    }
 
     // Favoriten-Standort ermitteln
     const favLocation = locations.find(l => l.id === favoriteLocationId);
@@ -1675,20 +1690,53 @@ function updateAll() {
         const row = document.getElementById(`loc-row-${loc.id}`);
         if (!row) return;
 
-        const calc = computeLocation(loc.lon, loc.offset, activeDate);
-
         row.querySelector('.cell-pos').textContent = `#${index + 1}`;
-        row.querySelector('.cell-zone').innerHTML = `${calc.zoneTime} ${calc.zoneDay}`;
+
+        // 1. Gesetzliche Zonenzeit
+        const utcHours = activeDate.getUTCHours() + 
+                         activeDate.getUTCMinutes() / 60 + 
+                         activeDate.getUTCSeconds() / 3600 + 
+                         activeDate.getUTCMilliseconds() / 3600000;
+        const zoneData = formatTimeWithDayOffset(utcHours + loc.offset);
+        row.querySelector('.cell-zone').innerHTML = `${zoneData.timeStr} ${zoneData.dayBadge}`;
+
+        const lonCell = row.querySelector('.cell-loc-lon-display');
+        const diffUtcCell = row.querySelector('.cell-diff-utc');
+        const diffMozZoneCell = row.querySelector('.cell-diff-moz-zone');
+        const diffWozZoneCell = row.querySelector('.cell-diff-woz-zone');
+        const diffFavCell = row.querySelector('.cell-diff-fav');
+
+        // Prüfen, ob eine gültige Zahl für den Längengrad existiert
+        const hasValidLon = (loc.lon !== null && loc.lon !== "" && !isNaN(loc.lon));
+
+        if (!hasValidLon) {
+            lonCell.innerHTML = `<div style="color:var(--text-muted); font-size:0.72rem;">--</div>`;
+            row.querySelector('.cell-moz').innerHTML = `--:--:--`;
+            row.querySelector('.cell-woz').innerHTML = `--:--:--`;
+            row.querySelector('.cell-noon').textContent = `--:--:--`;
+            diffUtcCell.textContent = isHighPrecision ? "--:--:--.--" : "--:--:--";
+            diffUtcCell.className = "badge-diff cell-diff-utc diff-zero";
+            diffMozZoneCell.textContent = isHighPrecision ? "--:--:--.--" : "--:--:--";
+            diffMozZoneCell.className = "badge-diff cell-diff-moz-zone diff-zero";
+            diffWozZoneCell.textContent = isHighPrecision ? "--:--:--.--" : "--:--:--";
+            diffWozZoneCell.className = "badge-diff cell-diff-woz-zone diff-zero";
+            diffFavCell.textContent = isHighPrecision ? "--:--:--.--" : "--:--:--";
+            diffFavCell.className = "badge-diff cell-diff-fav diff-zero";
+            return;
+        }
+
+        // 2. Astronomische Ortszeiten & Geodäsie bei vorhandener Koordinate
+        const calc = computeLocation(loc.lon, loc.offset, activeDate);
         row.querySelector('.cell-moz').innerHTML = `${calc.mozTime} ${calc.mozDay}`;
         row.querySelector('.cell-woz').innerHTML = `${calc.wozTime} ${calc.wozDay}`;
         row.querySelector('.cell-noon').textContent = calc.solarNoon;
 
-        // Koordinatenanzeige: Offiziell UND Relativ in derselben Zelle
-        const lonCell = row.querySelector('.cell-loc-lon-display');
         const officialDms = decimalToDMS(loc.lon);
         let coordHtml = `<div style="font-weight:700; font-size:0.85rem;">${loc.lon.toFixed(6)}° &nbsp;<span style="color:var(--text-muted); font-size:0.75rem;">(${officialDms.formatted})</span></div>`;
 
-        if (favLocation) {
+        const hasValidFavLon = (favLocation && favLocation.lon !== null && favLocation.lon !== "" && !isNaN(favLocation.lon));
+
+        if (hasValidFavLon) {
             if (loc.id === favLocation.id) {
                 coordHtml += `<div style="color:var(--gold); font-size:0.74rem; margin-top:2px; font-weight:700;">★ 0.000000° &nbsp;(0° 00' 00.00") [Null-Referenz]</div>`;
             } else {
@@ -1700,29 +1748,25 @@ function updateAll() {
                 coordHtml += `<div style="color:var(--cyan); font-size:0.74rem; margin-top:2px;">&Delta;&lambda;: ${relSign}${diffLon.toFixed(6)}° &nbsp;<span style="color:var(--text-muted);">(${relSign}${relDms.formatted})</span></div>`;
             }
         } else {
-            coordHtml += `<div style="color:var(--text-muted); font-size:0.7rem; margin-top:2px;">(Kein Favorit als 0°-Ref gesetzt)</div>`;
+            coordHtml += `<div style="color:var(--text-muted); font-size:0.7rem; margin-top:2px;">(Kein Favorit mit Koordinate aktiv)</div>`;
         }
         lonCell.innerHTML = coordHtml;
 
-        // Abweichungen
-        const diffUtcCell = row.querySelector('.cell-diff-utc');
+        // Abweichungs-Badges
         diffUtcCell.textContent = calc.diffMozFromUtcFormatted;
         diffUtcCell.className = `badge-diff cell-diff-utc ${calc.diffMozFromUtc > 0 ? 'diff-pos' : calc.diffMozFromUtc < 0 ? 'diff-neg' : 'diff-zero'}`;
 
-        const diffMozZoneCell = row.querySelector('.cell-diff-moz-zone');
         diffMozZoneCell.textContent = calc.diffMozFromZoneFormatted;
         diffMozZoneCell.className = `badge-diff cell-diff-moz-zone ${calc.diffMozFromZone > 0 ? 'diff-pos' : calc.diffMozFromZone < 0 ? 'diff-neg' : 'diff-zero'}`;
 
-        const diffWozZoneCell = row.querySelector('.cell-diff-woz-zone');
         diffWozZoneCell.textContent = calc.diffWozFromZoneFormatted;
         diffWozZoneCell.className = `badge-diff cell-diff-woz-zone ${calc.diffWozFromZone > 0 ? 'diff-pos' : calc.diffWozFromZone < 0 ? 'diff-neg' : 'diff-zero'}`;
 
-        // Differenz zu Favorit
-        const diffFavCell = row.querySelector('.cell-diff-fav');
-        if (!favLocation) {
+        // Differenz zum Favoriten
+        if (!hasValidFavLon) {
             diffFavCell.textContent = isHighPrecision ? "--:--:--.--" : "--:--:--";
             diffFavCell.className = "badge-diff cell-diff-fav diff-zero";
-            diffFavCell.title = "Wähle einen Ort mit dem Sternchen als Favoriten aus";
+            diffFavCell.title = "Wähle eine Station mit gültiger Koordinate als Referenz-Favorit (★)";
         } else if (favLocation.id === loc.id) {
             diffFavCell.textContent = isHighPrecision ? "★ +00:00:00.00" : "★ +00:00:00";
             diffFavCell.className = "badge-diff cell-diff-fav diff-ref";
@@ -1734,32 +1778,53 @@ function updateAll() {
 
             diffFavCell.textContent = formatDurationHms(diffFav);
             diffFavCell.className = `badge-diff cell-diff-fav ${diffFav > 0 ? 'diff-pos' : diffFav < 0 ? 'diff-neg' : 'diff-zero'}`;
-            diffFavCell.title = `MOZ-Differenz zu Favorit '${favLocation.name}'`;
+            diffFavCell.title = `MOZ-Differenz zu Favorit '${favLocation.name || 'Station'}'`;
         }
     });
 }
 
 /**
- * 7. MERIDIAN-GENERATOR LOGIK (DMS ⇄ DEZIMAL BIS 7 STELLEN)
+ * 7. GEODÄTISCHER KOORDINATENTRANSFORMATOR (DMS ⇄ DEZIMALGRAD)
  */
 function updateGeneratorFromDMS() {
-    const deg = parseFloat(document.getElementById('gen-dms-deg').value) || 0;
-    const min = parseFloat(document.getElementById('gen-dms-min').value) || 0;
-    const sec = parseFloat(document.getElementById('gen-dms-sec').value) || 0;
+    const degStr = document.getElementById('gen-dms-deg').value.trim();
+    const minStr = document.getElementById('gen-dms-min').value.trim();
+    const secStr = document.getElementById('gen-dms-sec').value.trim();
     const dir = document.getElementById('gen-dms-dir').value;
+
+    if (degStr === "" && minStr === "" && secStr === "") {
+        document.getElementById('gen-dec-input').value = "";
+        document.getElementById('gen-dms-formatted-preview').textContent = "Sexagesimal: --";
+        document.getElementById('gen-dec-formatted-preview').textContent = "Winkelzeitversatz zu UTC: -- (4 min pro 1°)";
+        return;
+    }
+
+    const deg = parseFloat(degStr) || 0;
+    const min = parseFloat(minStr) || 0;
+    const sec = parseFloat(secStr) || 0;
 
     const decimal = dmsToDecimal(deg, min, sec, dir);
     document.getElementById('gen-dec-input').value = decimal.toFixed(7);
 
     const dmsObj = decimalToDMS(decimal);
-    document.getElementById('gen-dms-formatted-preview').textContent = `Formatiert: ${dmsObj.formatted}`;
+    document.getElementById('gen-dms-formatted-preview').textContent = `Sexagesimal: ${dmsObj.formatted}`;
 
     const timeDiffMin = decimal * 4.0;
-    document.getElementById('gen-dec-formatted-preview').textContent = `Zeitversatz zu UTC: ${formatDurationHms(timeDiffMin, true)} (4 min pro 1°)`;
+    document.getElementById('gen-dec-formatted-preview').textContent = `Winkelzeitversatz zu UTC: ${formatDurationHms(timeDiffMin, true)} (4 min pro 1°)`;
 }
 
 function updateGeneratorFromDecimal() {
-    const decVal = parseFloat(document.getElementById('gen-dec-input').value) || 0;
+    const decStr = document.getElementById('gen-dec-input').value.trim();
+    if (decStr === "") {
+        document.getElementById('gen-dms-deg').value = "";
+        document.getElementById('gen-dms-min').value = "";
+        document.getElementById('gen-dms-sec').value = "";
+        document.getElementById('gen-dms-formatted-preview').textContent = "Sexagesimal: --";
+        document.getElementById('gen-dec-formatted-preview').textContent = "Winkelzeitversatz zu UTC: -- (4 min pro 1°)";
+        return;
+    }
+
+    const decVal = parseFloat(decStr) || 0;
     const dms = decimalToDMS(decVal);
 
     document.getElementById('gen-dms-deg').value = dms.deg;
@@ -1767,14 +1832,14 @@ function updateGeneratorFromDecimal() {
     document.getElementById('gen-dms-sec').value = dms.sec.toFixed(2);
     document.getElementById('gen-dms-dir').value = dms.dir;
 
-    document.getElementById('gen-dms-formatted-preview').textContent = `Formatiert: ${dms.formatted}`;
+    document.getElementById('gen-dms-formatted-preview').textContent = `Sexagesimal: ${dms.formatted}`;
 
     const timeDiffMin = decVal * 4.0;
-    document.getElementById('gen-dec-formatted-preview').textContent = `Zeitversatz zu UTC: ${formatDurationHms(timeDiffMin, true)} (4 min pro 1°)`;
+    document.getElementById('gen-dec-formatted-preview').textContent = `Winkelzeitversatz zu UTC: ${formatDurationHms(timeDiffMin, true)} (4 min pro 1°)`;
 }
 
 /**
- * 7b. NULLMERIDIAN-KONVERTER LOGIK (BIDIREKTIONAL)
+ * 7b. GEODÄTISCHE BEZUGSMERIDIAN-TRANSFORMATION (NULLMERIDIAN-REDUKTION)
  */
 function normalizeLongitude(lon) {
     let l = lon;
@@ -1784,43 +1849,66 @@ function normalizeLongitude(lon) {
 }
 
 function updateNullmeridianConverter() {
-    const refLon = parseFloat(document.getElementById('nm-ref-lon').value) || 0;
-    
-    // 1. Vorschau des Nullmeridians aktualisieren
-    const refDms = decimalToDMS(refLon);
-    document.getElementById('nm-ref-dms-preview').textContent = formatLongitude(refLon, 6) + ` (${refDms.formatted})`;
+    const refStr = document.getElementById('nm-ref-lon').value.trim();
+    const grwStr = document.getElementById('nm-in-grw').value.trim();
+    const relStr = document.getElementById('nm-in-rel').value.trim();
 
-    // 2. Richtung A: Greenwich -> Relativ zu Referenz
-    const grwInput = parseFloat(document.getElementById('nm-in-grw').value) || 0;
-    const grwInputDms = decimalToDMS(grwInput);
-    document.getElementById('nm-in-grw-dms-preview').textContent = `DMS: ${grwInputDms.formatted}`;
+    // 1. Vorschau des Referenzmeridians
+    if (refStr === "") {
+        document.getElementById('nm-ref-dms-preview').textContent = "--";
+    } else {
+        const refLon = parseFloat(refStr) || 0;
+        const refDms = decimalToDMS(refLon);
+        document.getElementById('nm-ref-dms-preview').textContent = formatLongitude(refLon, 6) + ` (${refDms.formatted})`;
+    }
 
-    let relLon = normalizeLongitude(grwInput - refLon);
-    const relSign = relLon >= 0 ? "+" : "";
-    const relDms = decimalToDMS(relLon);
-    const relTimeMin = relLon * 4.0;
+    // 2. Richtung A: IERS (Greenwich) -> Relativ
+    if (grwStr === "") {
+        document.getElementById('nm-in-grw-dms-preview').textContent = "Sexagesimal: --";
+        document.getElementById('nm-res-rel-dec').textContent = "--";
+        document.getElementById('nm-res-rel-dms').textContent = "--";
+        document.getElementById('nm-res-rel-time').textContent = "--";
+    } else {
+        const grwInput = parseFloat(grwStr) || 0;
+        const refLon = (refStr !== "") ? (parseFloat(refStr) || 0) : 0;
+        const grwInputDms = decimalToDMS(grwInput);
+        document.getElementById('nm-in-grw-dms-preview').textContent = `Sexagesimal: ${grwInputDms.formatted}`;
 
-    document.getElementById('nm-res-rel-dec').textContent = `${relSign}${relLon.toFixed(6)}°`;
-    document.getElementById('nm-res-rel-dms').textContent = relDms.formatted;
-    document.getElementById('nm-res-rel-time').textContent = formatDurationHms(relTimeMin);
+        let relLon = normalizeLongitude(grwInput - refLon);
+        const relSign = relLon >= 0 ? "+" : "";
+        const relDms = decimalToDMS(relLon);
+        const relTimeMin = relLon * 4.0;
 
-    // 3. Richtung B: Relativ zu Referenz -> Greenwich
-    const relInput = parseFloat(document.getElementById('nm-in-rel').value) || 0;
-    const relInputDms = decimalToDMS(relInput);
-    document.getElementById('nm-in-rel-dms-preview').textContent = `DMS: ${relInputDms.formatted}`;
+        document.getElementById('nm-res-rel-dec').textContent = `${relSign}${relLon.toFixed(6)}°`;
+        document.getElementById('nm-res-rel-dms').textContent = relDms.formatted;
+        document.getElementById('nm-res-rel-time').textContent = formatDurationHms(relTimeMin);
+    }
 
-    let grwLon = normalizeLongitude(refLon + relInput);
-    const grwSign = grwLon >= 0 ? "+" : "";
-    const grwDms = decimalToDMS(grwLon);
-    const grwTimeMin = grwLon * 4.0;
+    // 3. Richtung B: Relativ -> IERS (Greenwich)
+    if (relStr === "") {
+        document.getElementById('nm-in-rel-dms-preview').textContent = "Sexagesimal: --";
+        document.getElementById('nm-res-grw-dec').textContent = "--";
+        document.getElementById('nm-res-grw-dms').textContent = "--";
+        document.getElementById('nm-res-grw-time').textContent = "--";
+    } else {
+        const relInput = parseFloat(relStr) || 0;
+        const refLon = (refStr !== "") ? (parseFloat(refStr) || 0) : 0;
+        const relInputDms = decimalToDMS(relInput);
+        document.getElementById('nm-in-rel-dms-preview').textContent = `Sexagesimal: ${relInputDms.formatted}`;
 
-    document.getElementById('nm-res-grw-dec').textContent = `${grwSign}${grwLon.toFixed(6)}°`;
-    document.getElementById('nm-res-grw-dms').textContent = grwDms.formatted;
-    document.getElementById('nm-res-grw-time').textContent = formatDurationHms(grwTimeMin);
+        let grwLon = normalizeLongitude(refLon + relInput);
+        const grwSign = grwLon >= 0 ? "+" : "";
+        const grwDms = decimalToDMS(grwLon);
+        const grwTimeMin = grwLon * 4.0;
+
+        document.getElementById('nm-res-grw-dec').textContent = `${grwSign}${grwLon.toFixed(6)}°`;
+        document.getElementById('nm-res-grw-dms').textContent = grwDms.formatted;
+        document.getElementById('nm-res-grw-time').textContent = formatDurationHms(grwTimeMin);
+    }
 }
 
 /**
- * 8. TABELLEN-RENDERING & INTERAKTIONEN (ERSATZLOS OHNE 'ALS EIGENER STANDORT')
+ * 8. TABELLEN-RENDERING & INTERAKTIONEN (NEUTRALE FELDER OHNE BEISPIELWERTE)
  */
 function renderTable() {
     const tbody = document.getElementById('loc-tbody');
@@ -1828,15 +1916,15 @@ function renderTable() {
 
     const filter = locationSearchFilter.toLowerCase().trim();
     const visibleLocations = locations.filter(l => 
-        (l.name && l.name.toLowerCase().includes(filter)) ||
-        l.lon.toFixed(6).includes(filter)
+        ((l.name || "").toLowerCase().includes(filter)) ||
+        (l.lon !== null && l.lon !== "" && l.lon.toFixed(6).includes(filter))
     );
 
     if (locations.length === 0) {
         tbody.innerHTML = `
             <tr>
                 <td colspan="14" style="text-align: center; color: var(--text-muted); padding: 36px 16px;">
-                    Keine Standorte eingetragen. Nutzen Sie <strong>„➕ Ort anlegen“</strong> oder den <strong>Meridian-Generator</strong>.
+                    Keine Stationen eingetragen. Nutzen Sie <strong>„➕ Station anlegen“</strong> oder den <strong>Koordinatentransformator</strong>.
                 </td>
             </tr>
         `;
@@ -1847,7 +1935,7 @@ function renderTable() {
         tbody.innerHTML = `
             <tr>
                 <td colspan="14" style="text-align: center; color: var(--text-muted); padding: 24px 16px;">
-                    Keine Standorte passend zum Filter <em>„${locationSearchFilter}“</em> gefunden.
+                    Keine Stationen passend zum Filter <em>„${locationSearchFilter}“</em> gefunden.
                 </td>
             </tr>
         `;
@@ -1874,12 +1962,12 @@ function renderTable() {
                 </div>
             </td>
             <td style="text-align: center;">
-                <button class="btn-fav ${isFav ? 'active' : ''}" onclick="toggleFavorite(${loc.id})" title="${isFav ? 'Aktiver Referenz-Favorit (0.000000°)' : 'Diesen Ort als Referenz-Favoriten (0.000000°) festlegen'}">
+                <button class="btn-fav ${isFav ? 'active' : ''}" onclick="toggleFavorite(${loc.id})" title="${isFav ? 'Aktiver Referenz-Favorit (0.000000°)' : 'Diese Station als Referenz-Favoriten (0.000000°) festlegen'}">
                     ★
                 </button>
             </td>
             <td>
-                <input type="text" class="input-loc-name" data-id="${loc.id}" style="font-weight: 600;" placeholder="Bezeichnung">
+                <input type="text" class="input-loc-name" data-id="${loc.id}" style="font-weight: 600;">
             </td>
             <td>
                 <div style="display: flex; flex-direction: column; gap: 4px;">
@@ -1905,8 +1993,8 @@ function renderTable() {
             </td>
         `;
 
-        tr.querySelector('.input-loc-name').value = loc.name;
-        tr.querySelector('.input-loc-lon').value = loc.lon.toFixed(6);
+        tr.querySelector('.input-loc-name').value = loc.name || "";
+        tr.querySelector('.input-loc-lon').value = (loc.lon !== null && loc.lon !== "" && !isNaN(loc.lon)) ? loc.lon : "";
 
         tbody.appendChild(tr);
     });
@@ -1944,7 +2032,8 @@ function attachTableEvents() {
             const id = Number(e.target.dataset.id);
             const loc = locations.find(l => l.id === id);
             if (loc) {
-                loc.lon = parseFloat(e.target.value) || 0;
+                const rawVal = e.target.value.trim();
+                loc.lon = (rawVal === "" || isNaN(parseFloat(rawVal))) ? null : parseFloat(rawVal);
                 saveState();
                 updateAll();
             }
@@ -1987,9 +2076,13 @@ function sortAlphabetical() {
     updateAll();
 }
 
-function addLocation(name = "", lon = 0.0, offset = 0) {
-    const locName = name || `Messpunkt ${locations.length + 1}`;
-    const newLoc = { id: Date.now(), name: locName, lon: parseFloat(lon) || 0.0, offset: parseFloat(offset) || 0 };
+function addLocation(name = "", lon = null, offset = 0) {
+    const newLoc = { 
+        id: Date.now(), 
+        name: name || "", 
+        lon: (lon !== null && lon !== "" && !isNaN(lon)) ? parseFloat(lon) : null, 
+        offset: parseFloat(offset) || 0 
+    };
     locations.push(newLoc);
 
     if (locations.length === 1 && favoriteLocationId === null) {
@@ -2118,10 +2211,12 @@ function loadState() {
         if (saved) {
             const data = JSON.parse(saved);
             if (data.isHighPrecision !== undefined) setHighPrecision(data.isHighPrecision);
-            if (data.userLon !== undefined) document.getElementById('user-lon').value = parseFloat(data.userLon).toFixed(6);
+            if (data.userLon !== undefined && data.userLon !== "") {
+                document.getElementById('user-lon').value = data.userLon;
+            }
             if (data.userOffset !== undefined) document.getElementById('user-offset').value = data.userOffset;
-            if (data.genDec !== undefined) {
-                document.getElementById('gen-dec-input').value = parseFloat(data.genDec).toFixed(7);
+            if (data.genDec !== undefined && data.genDec !== "") {
+                document.getElementById('gen-dec-input').value = data.genDec;
                 updateGeneratorFromDecimal();
             }
             if (Array.isArray(data.locations)) locations = data.locations;
@@ -2198,7 +2293,7 @@ function setupControls() {
         btnLive.classList.remove('active');
         simControls.style.opacity = '1';
         simControls.style.pointerEvents = 'all';
-        simIndicator.textContent = "SIMULATION / ZEITREISE AKTIV";
+        simIndicator.textContent = "MANUELLE SIMULATION AKTIV";
         simIndicator.style.background = "rgba(255,183,3,0.15)";
         simIndicator.style.color = "var(--gold)";
         simIndicator.style.borderColor = "var(--gold)";
@@ -2264,31 +2359,52 @@ function setupControls() {
     });
 
     document.getElementById('btn-copy-dms').onclick = () => {
-        const text = document.getElementById('gen-dms-formatted-preview').textContent.replace('Formatiert: ', '');
+        const previewText = document.getElementById('gen-dms-formatted-preview').textContent.trim();
+        const text = previewText.replace(/^Sexagesimal:\s*/i, '').replace(/^Formatiert:\s*/i, '');
+        if (text === "--" || text === "") {
+            showToast("Kein Sexagesimalwert zum Kopieren vorhanden!");
+            return;
+        }
         navigator.clipboard.writeText(text).then(() => showToast(`Kopiert: ${text}`));
     };
 
     document.getElementById('btn-copy-dec').onclick = () => {
-        const text = `${parseFloat(document.getElementById('gen-dec-input').value).toFixed(7)}°`;
+        const valStr = document.getElementById('gen-dec-input').value.trim();
+        if (valStr === "" || isNaN(parseFloat(valStr))) {
+            showToast("Kein Dezimalwert zum Kopieren vorhanden!");
+            return;
+        }
+        const text = `${parseFloat(valStr).toFixed(7)}°`;
         navigator.clipboard.writeText(text).then(() => showToast(`Kopiert: ${text}`));
     };
 
     document.getElementById('btn-gen-add-table').onclick = () => {
-        const val = parseFloat(document.getElementById('gen-dec-input').value) || 0;
-        const dms = decimalToDMS(val);
-        const autoName = `Meridian ${dms.formatted}`;
-        addLocation(autoName, val, 0);
-        showToast(`'${autoName}' zur Tabelle hinzugefügt!`);
+        const decStr = document.getElementById('gen-dec-input').value.trim();
+        if (decStr === "") {
+            addLocation("", null, 0);
+            showToast("Neue freie Station zur Matrix hinzugefügt!");
+        } else {
+            const val = parseFloat(decStr) || 0;
+            const dms = decimalToDMS(val);
+            const autoName = `Meridian ${dms.formatted}`;
+            addLocation(autoName, val, 0);
+            showToast(`'${autoName}' zur Matrix hinzugefügt!`);
+        }
     };
 
     document.getElementById('btn-gen-apply-sim').onclick = () => {
-        const val = parseFloat(document.getElementById('gen-dec-input').value) || 0;
+        const decStr = document.getElementById('gen-dec-input').value.trim();
+        if (decStr === "" || isNaN(parseFloat(decStr))) {
+            showToast("Bitte zuerst einen Längengrad im Transformator eingeben!");
+            return;
+        }
+        const val = parseFloat(decStr);
         btnSim.click();
         document.getElementById('sim-ref-category').value = 'custom-meridian';
         updateDynamicParamUI();
         document.getElementById('sim-ref-meridian-input').value = val.toFixed(7);
         syncSimulationFromControls();
-        showToast(`Simulator-Referenz auf ${val.toFixed(7)}° gesetzt!`);
+        showToast(`Simulations-Referenz auf ${val.toFixed(7)}° gesetzt!`);
     };
 
     // NULLMERIDIAN-KONVERTER EVENTS & SCHNELLWAHL
@@ -2299,44 +2415,62 @@ function setupControls() {
     document.getElementById('btn-nm-set-greenwich').onclick = () => {
         document.getElementById('nm-ref-lon').value = (0).toFixed(6);
         updateNullmeridianConverter();
-        showToast("Nullmeridian auf Greenwich (0.000000°) gesetzt!");
+        showToast("Nullmeridian auf IERS/Greenwich (0.000000°) gesetzt!");
     };
 
     document.getElementById('btn-nm-set-user').onclick = () => {
-        const userLon = parseFloat(document.getElementById('user-lon').value) || 0;
+        const userLonRaw = document.getElementById('user-lon').value.trim();
+        if (userLonRaw === "" || isNaN(parseFloat(userLonRaw))) {
+            showToast("Referenzstation besitzt noch keinen Längengrad!");
+            return;
+        }
+        const userLon = parseFloat(userLonRaw);
         document.getElementById('nm-ref-lon').value = userLon.toFixed(6);
         updateNullmeridianConverter();
-        showToast(`Nullmeridian auf eigenen Standort (${userLon.toFixed(6)}°) gesetzt!`);
+        showToast(`Nullmeridian auf Referenzstation (${userLon.toFixed(6)}°) gesetzt!`);
     };
 
     document.getElementById('btn-nm-set-fav').onclick = () => {
         const fav = locations.find(l => l.id === favoriteLocationId);
-        if (fav) {
+        if (fav && fav.lon !== null && fav.lon !== "" && !isNaN(fav.lon)) {
             document.getElementById('nm-ref-lon').value = fav.lon.toFixed(6);
             updateNullmeridianConverter();
-            showToast(`Nullmeridian auf Favorit '${fav.name}' (${fav.lon.toFixed(6)}°) gesetzt!`);
+            showToast(`Nullmeridian auf Favorit '${fav.name || 'Station'}' (${fav.lon.toFixed(6)}°) gesetzt!`);
+        } else if (fav) {
+            showToast("Der markierte Favorit besitzt noch keinen Längengrad!");
         } else {
-            showToast("Kein Favorit in der Tabelle markiert (Stern ★ anklicken)!");
+            showToast("Kein Favorit in der Matrix markiert (Stern ★ anklicken)!");
         }
     };
 
     document.getElementById('btn-copy-nm-ref').onclick = () => {
-        const val = `${parseFloat(document.getElementById('nm-ref-lon').value).toFixed(6)}°`;
+        const valStr = document.getElementById('nm-ref-lon').value.trim();
+        if (valStr === "" || isNaN(parseFloat(valStr))) {
+            showToast("Kein Referenzmeridian zum Kopieren vorhanden!");
+            return;
+        }
+        const val = `${parseFloat(valStr).toFixed(6)}°`;
         navigator.clipboard.writeText(val).then(() => showToast(`Kopiert: ${val}`));
     };
 
     document.getElementById('btn-copy-nm-rel-result').onclick = () => {
-        const dec = document.getElementById('nm-res-rel-dec').textContent;
-        const dms = document.getElementById('nm-res-rel-dms').textContent;
-        const text = `${dec} (${dms})`;
-        navigator.clipboard.writeText(text).then(() => showToast(`Kopiert: ${text}`));
+        const dec = document.getElementById('nm-res-rel-dec').textContent.trim();
+        const dms = document.getElementById('nm-res-rel-dms').textContent.trim();
+        const time = document.getElementById('nm-res-rel-time').textContent.trim();
+        
+        const text = `Relativmeridian Δλ (Dezimalgrad):\n${dec}\nRelativmeridian Δλ (Sexagesimal DMS):\n${dms}\nChronometrischer Versatz zu λ0:\n${time}`;
+        
+        navigator.clipboard.writeText(text).then(() => showToast("Ergebnisblock 1 (Relativ) kopiert!"));
     };
 
     document.getElementById('btn-copy-nm-grw-result').onclick = () => {
-        const dec = document.getElementById('nm-res-grw-dec').textContent;
-        const dms = document.getElementById('nm-res-grw-dms').textContent;
-        const text = `${dec} (${dms})`;
-        navigator.clipboard.writeText(text).then(() => showToast(`Kopiert: ${text}`));
+        const dec = document.getElementById('nm-res-grw-dec').textContent.trim();
+        const dms = document.getElementById('nm-res-grw-dms').textContent.trim();
+        const time = document.getElementById('nm-res-grw-time').textContent.trim();
+        
+        const text = `IERS-Länge λ (Dezimalgrad):\n${dec}\nIERS-Länge λ (Sexagesimal DMS):\n${dms}\nChronometrischer Versatz zu IERS/Greenwich:\n${time}`;
+        
+        navigator.clipboard.writeText(text).then(() => showToast("Ergebnisblock 2 (IERS) kopiert!"));
     };
 
     // GPS Abfrage (6 Dezimalstellen)
@@ -2374,58 +2508,113 @@ function setupControls() {
     document.getElementById('btn-add-loc').onclick = () => addLocation();
     document.getElementById('btn-clear-all').onclick = clearAllLocations;
 
-    // JSON Export
+    // VOLLSTÄNDIGER GEODÄTISCHER JSON-EXPORT (INKL. TRANSFORMER & NULLMERIDIAN)
     document.getElementById('btn-export-json').onclick = () => {
+        const userLonVal = document.getElementById('user-lon').value.trim();
+        const nmRefVal = document.getElementById('nm-ref-lon').value.trim();
+        const genDecVal = document.getElementById('gen-dec-input').value.trim();
+
         const payload = {
-            version: "CHRONOS_PRECISION_V6",
+            version: "CHRONOS_GEODESY_PRO_V7",
             exportDate: new Date().toISOString(),
             isHighPrecision: isHighPrecision,
-            userLocation: {
-                lon: parseFloat(document.getElementById('user-lon').value) || 0,
+            referenceStation: {
+                lon: (userLonVal === "" || isNaN(parseFloat(userLonVal))) ? null : parseFloat(userLonVal),
                 offset: parseFloat(document.getElementById('user-offset').value) || 0
             },
+            primeMeridianTransformation: {
+                refLon: (nmRefVal === "" || isNaN(parseFloat(nmRefVal))) ? null : parseFloat(nmRefVal)
+            },
+            coordinateTransformer: {
+                decLon: (genDecVal === "" || isNaN(parseFloat(genDecVal))) ? null : parseFloat(genDecVal)
+            },
             favoriteLocationId: favoriteLocationId,
-            locations: locations
+            stationsMatrix: locations
         };
+
         const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `chronos_geodaesie_backup_${new Date().toISOString().slice(0,10)}.json`;
+        a.download = `chronos_geodaesie_vollbackup_${new Date().toISOString().slice(0,10)}.json`;
         a.click();
         URL.revokeObjectURL(url);
     };
 
-    // JSON Import
+    // VOLLSTÄNDIGER, FEHLERTOLERANTER JSON-IMPORT (AUCH ABWÄRTSKOMPATIBEL)
     document.getElementById('btn-import-json').onclick = () => document.getElementById('file-import').click();
 
     document.getElementById('file-import').onchange = (e) => {
         const file = e.target.files[0];
         if (!file) return;
         const reader = new FileReader();
+
         reader.onload = (evt) => {
             try {
                 const parsed = JSON.parse(evt.target.result);
+
+                // 1. Fall: Reines Array von Stationen (altes Format)
                 if (Array.isArray(parsed)) {
                     locations = parsed;
-                } else if (parsed && typeof parsed === 'object') {
-                    if (Array.isArray(parsed.locations)) locations = parsed.locations;
-                    if (parsed.isHighPrecision !== undefined) setHighPrecision(parsed.isHighPrecision);
-                    if (parsed.userLocation) {
-                        if (parsed.userLocation.lon !== undefined) document.getElementById('user-lon').value = parseFloat(parsed.userLocation.lon).toFixed(6);
-                        if (parsed.userLocation.offset !== undefined) document.getElementById('user-offset').value = parsed.userLocation.offset;
+                } 
+                // 2. Fall: Vollständiges Konfigurationsobjekt
+                else if (parsed && typeof parsed === 'object') {
+                    // Stationsmatrix einlesen (unterstützt neuen und alten Schlüssel)
+                    if (Array.isArray(parsed.stationsMatrix)) {
+                        locations = parsed.stationsMatrix;
+                    } else if (Array.isArray(parsed.locations)) {
+                        locations = parsed.locations;
                     }
+
+                    // Präzision
+                    if (parsed.isHighPrecision !== undefined) {
+                        setHighPrecision(parsed.isHighPrecision);
+                    }
+
+                    // Referenzstation (erhält leere Werte sauber als Leerfeld)
+                    const refStation = parsed.referenceStation || parsed.userLocation;
+                    if (refStation) {
+                        if (refStation.lon !== undefined && refStation.lon !== null && refStation.lon !== "") {
+                            document.getElementById('user-lon').value = parseFloat(refStation.lon).toFixed(6);
+                        } else {
+                            document.getElementById('user-lon').value = "";
+                        }
+                        if (refStation.offset !== undefined) {
+                            document.getElementById('user-offset').value = refStation.offset;
+                        }
+                    }
+
+                    // Nullmeridian-Transformation
+                    if (parsed.primeMeridianTransformation && parsed.primeMeridianTransformation.refLon !== undefined) {
+                        const rVal = parsed.primeMeridianTransformation.refLon;
+                        document.getElementById('nm-ref-lon').value = (rVal !== null && rVal !== "") ? parseFloat(rVal).toFixed(6) : "";
+                        updateNullmeridianConverter();
+                    }
+
+                    // Koordinatentransformator
+                    if (parsed.coordinateTransformer && parsed.coordinateTransformer.decLon !== undefined) {
+                        const dVal = parsed.coordinateTransformer.decLon;
+                        document.getElementById('gen-dec-input').value = (dVal !== null && dVal !== "") ? parseFloat(dVal).toFixed(7) : "";
+                        updateGeneratorFromDecimal();
+                    }
+
+                    // Referenz-Favorit
                     if (parsed.favoriteLocationId !== undefined) {
                         favoriteLocationId = parsed.favoriteLocationId;
                     }
                 }
+
+                // Tabelle neu aufbauen & alles neu durchrechnen
                 renderTable();
                 updateDynamicParamUI();
                 saveState();
                 updateAll();
-                showToast("Konfiguration & Geodaten erfolgreich importiert!");
+                showToast("Vollständiges Backup erfolgreich eingespielt!");
             } catch(err) {
-                alert("Ungültige JSON-Datei: " + err.message);
+                alert("Fehler beim Importieren: Die JSON-Datei ist ungültig oder beschädigt.\n" + err.message);
+            } finally {
+                // Ermöglicht das wiederholte Einlesen derselben Datei
+                e.target.value = "";
             }
         };
         reader.readAsText(file);
