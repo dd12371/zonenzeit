@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1200, user-scalable=yes, minimum-scale=0.2, maximum-scale=5.0">
+    <meta name="viewport" content="width=1240, initial-scale=0.32, minimum-scale=0.2, maximum-scale=5.0, user-scalable=yes">
     <title>CHRONOS // Zonenzeit, MOZ, WOZ & Meridian-Geodäsie</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -47,15 +47,14 @@
             color: var(--text-main);
             font-family: var(--font-sans);
             padding: 24px 16px;
-            display: flex;
-            justify-content: center;
             min-height: 100vh;
-            min-width: 1200px; /* Garantiert stets die volle Messblatt-Breite */
         }
 
         .container {
             width: 100%;
             max-width: 1650px;
+            min-width: 1200px;
+            margin: 0 auto;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -519,13 +518,12 @@
             text-shadow: var(--glow-cyan);
         }
 
-        /* TABLE BASE STYLING (GILT UNIVERSAL: PC & SMARTPHONE) */
+        /* TABLE BASE STYLING */
         .table-responsive {
             width: 100%;
             border-radius: 12px;
             border: 1px solid var(--border);
             background: rgba(5, 8, 18, 0.4);
-            overflow-x: hidden !important; /* Kein horizontaler Schieberegler */
         }
 
         table.cyber-table {
@@ -533,34 +531,26 @@
             border-collapse: collapse;
             font-size: 0.85rem;
             text-align: left;
-            table-layout: fixed; /* Exakte Spalteneinhaltung */
         }
 
         table.cyber-table th {
             background: #090e1c;
-            padding: 8px 4px;
+            padding: 10px 6px;
             color: var(--cyan);
             font-family: var(--font-display);
             text-transform: uppercase;
-            font-size: 0.68rem;
+            font-size: 0.7rem;
             letter-spacing: 0.5px;
             border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 10;
-            min-width: 0 !important;
-            line-height: 1.15;
-            text-align: center;
         }
 
         table.cyber-table td {
-            padding: 6px 3px;
+            padding: 8px 6px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             vertical-align: middle;
-            text-align: center;
-            font-size: 0.72rem;
-            white-space: normal;
-            word-wrap: break-word;
         }
 
         table.cyber-table tr:hover td {
@@ -599,10 +589,9 @@
         .time-cell-main {
             font-family: var(--font-mono);
             font-weight: 700;
-            font-size: 0.74rem;
+            font-size: 0.82rem;
             cursor: copy;
             transition: opacity 0.15s;
-            white-space: nowrap !important;
         }
         .time-cell-main:hover {
             opacity: 0.8;
@@ -611,17 +600,13 @@
 
         .badge-diff {
             font-family: var(--font-mono);
-            font-size: 0.68rem;
-            padding: 2px 2px;
+            font-size: 0.74rem;
+            padding: 2px 5px;
             border-radius: 4px;
             font-weight: 700;
-            display: block;
-            width: 100%;
-            text-align: center;
+            display: inline-block;
             cursor: copy;
             transition: transform 0.15s;
-            box-sizing: border-box;
-            white-space: nowrap;
         }
         .badge-diff:hover {
             transform: scale(1.04);
@@ -633,17 +618,51 @@
         .diff-ref { background: rgba(255, 183, 3, 0.15); color: var(--gold); border: 1px solid rgba(255, 183, 3, 0.4); }
 
         /* ==========================================================================
-           VERGLEICHSTABELLE: 14 SPALTEN EXAKT AUF 100% (JEDER ORT IMMER IN EINER ZEILE)
+           EINHEITLICHES TABELLENFORMAT (DESKTOP & HANDY-ZOOM): KEIN SCHIEBER, ALLES IN EINER ZEILE
            ========================================================================== */
-        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(1)  { width: 4.5% !important; }  /* Pos */
-        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(2)  { width: 2.8% !important; }  /* Fav */
-        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(3)  { width: 9.8% !important; text-align: left; }  /* Name */
-        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(4)  { width: 14.5% !important; text-align: left; } /* Lon */
-        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(5)  { width: 9.2% !important; }  /* Offset */
-        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(6)  { width: 7.2% !important; }  /* Zone */
-        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(7)  { width: 7.2% !important; }  /* MOZ */
-        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(8)  { width: 7.2% !important; }  /* WOZ */
-        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(9)  { width: 6.2% !important; }  /* Mittag */
+        .table-responsive {
+            width: 100%;
+            overflow-x: hidden !important; /* Kein horizontaler Schieber */
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(5, 8, 18, 0.4);
+        }
+
+        .scroll-ref-wrap {
+            max-height: 400px;
+            overflow-y: auto;
+            overflow-x: hidden !important; /* Verzeichnis: nur vertikal scrollbar, kein Schieber links/rechts */
+        }
+
+        /* 1. STANDORT-VERGLEICHSTABELLE: EXAKT ABGESTIMMTE 14 SPALTEN */
+        .table-responsive:not(.scroll-ref-wrap) table.cyber-table {
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th,
+        .table-responsive:not(.scroll-ref-wrap) table.cyber-table td {
+            white-space: normal !important;
+            padding: 6px 3px !important;
+            font-size: 0.72rem !important;
+            text-align: center;
+        }
+
+        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th {
+            min-width: 0 !important;
+            line-height: 1.15;
+        }
+
+        /* Prozentbreiten für alle 14 Spalten (100% Gesamtbreite) */
+        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(1) { width: 4.5% !important; }  /* Pos */
+        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(2) { width: 2.8% !important; }  /* Fav */
+        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(3) { width: 9.8% !important; text-align: left; }  /* Name */
+        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(4) { width: 14.5% !important; text-align: left; } /* Lon */
+        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(5) { width: 9.2% !important; }  /* Offset */
+        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(6) { width: 7.2% !important; }  /* Zone */
+        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(7) { width: 7.2% !important; }  /* MOZ */
+        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(8) { width: 7.2% !important; }  /* WOZ */
+        .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(9) { width: 6.2% !important; }  /* Mittag */
         .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(10) { width: 7.4% !important; } /* Abw. UTC */
         .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(11) { width: 7.4% !important; } /* Abw. MOZ-Zone */
         .table-responsive:not(.scroll-ref-wrap) table.cyber-table th:nth-child(12) { width: 7.4% !important; } /* Abw. WOZ-Zone */
@@ -655,45 +674,73 @@
             padding: 4px 5px !important;
             font-size: 0.74rem !important;
         }
+
         .table-responsive:not(.scroll-ref-wrap) .input-loc-lon {
             width: 100% !important;
             padding: 4px !important;
             font-size: 0.72rem !important;
         }
+
         .table-responsive:not(.scroll-ref-wrap) .cell-loc-lon-display {
             font-size: 0.65rem !important;
             line-height: 1.15 !important;
             text-align: left;
         }
+
         .table-responsive:not(.scroll-ref-wrap) .cell-loc-lon-display div {
             font-size: 0.65rem !important;
         }
+
         .table-responsive:not(.scroll-ref-wrap) .select-loc-offset {
             width: 100% !important;
             padding: 4px 1px !important;
             font-size: 0.68rem !important;
         }
 
-        /* ==========================================================================
-           VERZEICHNIS-TABELLE: 6 SPALTEN AUF 100% OHNE HORIZONTALEN SCHIEBER
-           ========================================================================== */
-        .scroll-ref-wrap {
-            max-height: 400px;
-            overflow-y: auto;
-            overflow-x: hidden !important; /* Schieber links/rechts eliminiert */
+        .table-responsive:not(.scroll-ref-wrap) .badge-diff {
+            display: block;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+            padding: 2px 1px !important;
+            font-size: 0.68rem !important;
         }
 
-        .scroll-ref-wrap table.cyber-table th:nth-child(1) { width: 9% !important; }
-        .scroll-ref-wrap table.cyber-table th:nth-child(2) { width: 14% !important; }
-        .scroll-ref-wrap table.cyber-table th:nth-child(3) { width: 9% !important; }
-        .scroll-ref-wrap table.cyber-table th:nth-child(4) { width: 23% !important; text-align: left; }
-        .scroll-ref-wrap table.cyber-table th:nth-child(5) { width: 34% !important; text-align: left; }
-        .scroll-ref-wrap table.cyber-table th:nth-child(6) { width: 11% !important; }
-
-        .scroll-ref-wrap table.cyber-table td:nth-child(4),
-        .scroll-ref-wrap table.cyber-table td:nth-child(5) {
-            text-align: left;
+        .table-responsive:not(.scroll-ref-wrap) .time-cell-main {
+            font-size: 0.74rem !important;
+            white-space: nowrap !important;
         }
+
+        /* 2. REFERENZ-VERZEICHNIS: EXAKT ABGESTIMMTE 6 SPALTEN OHNE TEXTÜBERSTAND */
+        .scroll-ref-wrap table.cyber-table {
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        .scroll-ref-wrap table.cyber-table th,
+        .scroll-ref-wrap table.cyber-table td {
+            padding: 6px 4px !important;
+            font-size: 0.72rem !important;
+            word-break: break-word !important; /* Verhindert Überstehen langer Zeitzonennamen */
+        }
+
+        .scroll-ref-wrap table.cyber-table th {
+            min-width: 0 !important;
+            line-height: 1.15;
+        }
+
+        .scroll-ref-wrap table.cyber-table th:nth-child(1),
+        .scroll-ref-wrap table.cyber-table td:nth-child(1) { width: 9% !important; text-align: center; }
+        .scroll-ref-wrap table.cyber-table th:nth-child(2),
+        .scroll-ref-wrap table.cyber-table td:nth-child(2) { width: 14% !important; }
+        .scroll-ref-wrap table.cyber-table th:nth-child(3),
+        .scroll-ref-wrap table.cyber-table td:nth-child(3) { width: 10% !important; text-align: center; }
+        .scroll-ref-wrap table.cyber-table th:nth-child(4),
+        .scroll-ref-wrap table.cyber-table td:nth-child(4) { width: 24% !important; }
+        .scroll-ref-wrap table.cyber-table th:nth-child(5),
+        .scroll-ref-wrap table.cyber-table td:nth-child(5) { width: 33% !important; }
+        .scroll-ref-wrap table.cyber-table th:nth-child(6),
+        .scroll-ref-wrap table.cyber-table td:nth-child(6) { width: 10% !important; text-align: center; }
 
         /* TOAST NOTIFICATION */
         .toast {
@@ -1005,7 +1052,7 @@
                         <th>Bezugsmeridian (&lambda;<sub>0</sub>)</th>
                         <th>Winkelmaß / Richtung</th>
                         <th>Nautische Zone / Geodätischer Sektor</th>
-                        <th style="min-width: 300px;">Amtliche Zeitzonennamen & Kürzel</th>
+                        <th>Amtliche Zeitzonennamen & Kürzel</th>
                         <th>Zeitabstand (Minuten)</th>
                     </tr>
                 </thead>
