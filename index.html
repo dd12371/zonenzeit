@@ -518,6 +518,65 @@
             text-shadow: var(--glow-cyan);
         }
 
+        /* NULLMERIDIAN KONVERTER GRID & BOXEN */
+        .converter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .converter-panel {
+            background: rgba(8, 13, 26, 0.65);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .converter-panel-header {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .converter-result-box {
+            background: rgba(5, 8, 18, 0.7);
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .converter-result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+        }
+
+        .converter-result-item .lbl {
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            font-family: var(--font-sans);
+            text-transform: uppercase;
+        }
+
+        .converter-result-item .val {
+            font-weight: 700;
+            color: #fff;
+        }
+
         /* TABLE BASE STYLING */
         .table-responsive {
             width: 100%;
@@ -927,6 +986,94 @@
                 </div>
                 <div style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);" id="gen-dec-formatted-preview">
                     Zeitversatz zu UTC: +00:53:37.04 (4 min pro 1°)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NULLMERIDIAN-KONVERTER (GEODÄTISCHE TRANSFORMATION) -->
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h2>🌐 Relativer Nullmeridian-Konverter (Bezugstransformation)</h2>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 3px;">Definiere jeden Längengrad der Erde als 0°-Nullmeridian und wandle beliebige Koordinaten bidirektional um.</p>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn btn-outline" id="btn-nm-set-greenwich" title="Setzt den Nullmeridian auf den Standard Greenwich Nullmeridian (0.000000°)">🇬🇧 Greenwich (0°)</button>
+                <button class="btn btn-outline" id="btn-nm-set-user" title="Übernimmt den Längengrad deines eigenen Beobachtungspunktes">📍 Eigener Ort</button>
+                <button class="btn btn-outline" id="btn-nm-set-fav" title="Übernimmt den Längengrad des markierten Favoriten aus der Tabelle">★ Favorit</button>
+            </div>
+        </div>
+
+        <!-- DEFINITION DES NEUEN NULLMERIDIANS -->
+        <div style="background: rgba(8, 13, 26, 0.7); border: 1px solid var(--border-bright); border-radius: 12px; padding: 14px 18px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <label style="font-family: var(--font-display); font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gold);">
+                    🎯 Aktiver Nullmeridian (&lambda;<sub>0</sub> im Greenwich-System):
+                </label>
+                <span id="nm-ref-dms-preview" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--cyan);">0° 00' 00.00" (Nullmeridian)</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;">
+                <input type="number" id="nm-ref-lon" step="0.000001" min="-180" max="180" value="0.000000" style="font-size: 1rem; font-weight: 700; color: var(--gold); border-color: rgba(255, 183, 3, 0.4);">
+                <button class="btn btn-icon" id="btn-copy-nm-ref" title="Nullmeridian kopieren" style="padding: 8px 12px;">📋 Kopieren</button>
+            </div>
+        </div>
+
+        <!-- BIDIREKTIONALE BERECHNUNGS-PANELS -->
+        <div class="converter-grid">
+            <!-- RICHTUNG A: GREENWICH -> RELATIV -->
+            <div class="converter-panel">
+                <div class="converter-panel-header">
+                    <span>1. Greenwich &rarr; Relativ zu &lambda;<sub>0</sub></span>
+                    <button class="btn-icon" id="btn-copy-nm-rel-result" title="Relatives Ergebnis kopieren">📋</button>
+                </div>
+                <div class="control-group">
+                    <label>Koordinate in Greenwich (°Dezimal)</label>
+                    <input type="number" id="nm-in-grw" step="0.000001" min="-180" max="180" value="13.404954" placeholder="z. B. 13.404954">
+                    <span id="nm-in-grw-dms-preview" style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono);">DMS: 13° 24' 17.83" E</span>
+                </div>
+
+                <div class="converter-result-box">
+                    <div class="converter-result-item">
+                        <span class="lbl">Relativ zu &lambda;<sub>0</sub> (Dezimal):</span>
+                        <span class="val hl-cyan" id="nm-res-rel-dec">+13.404954°</span>
+                    </div>
+                    <div class="converter-result-item">
+                        <span class="lbl">Relativ zu &lambda;<sub>0</sub> (Sexagesimal DMS):</span>
+                        <span class="val hl-cyan" id="nm-res-rel-dms">13° 24' 17.83" E</span>
+                    </div>
+                    <div class="converter-result-item">
+                        <span class="lbl">Winkelzeit-Differenz zu &lambda;<sub>0</sub>:</span>
+                        <span class="val hl-emerald" id="nm-res-rel-time">+00:53:37</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RICHTUNG B: RELATIV -> GREENWICH -->
+            <div class="converter-panel">
+                <div class="converter-panel-header">
+                    <span>2. Relativ zu &lambda;<sub>0</sub> &rarr; Greenwich</span>
+                    <button class="btn-icon" id="btn-copy-nm-grw-result" title="Greenwich Ergebnis kopieren">📋</button>
+                </div>
+                <div class="control-group">
+                    <label>Relative Koordinate zu &lambda;<sub>0</sub> (°Dezimal)</label>
+                    <input type="number" id="nm-in-rel" step="0.000001" min="-180" max="180" value="10.000000" placeholder="z. B. 10.000000">
+                    <span id="nm-in-rel-dms-preview" style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono);">DMS: 10° 00' 00.00" E</span>
+                </div>
+
+                <div class="converter-result-box">
+                    <div class="converter-result-item">
+                        <span class="lbl">Greenwich-Koordinate (Dezimal):</span>
+                        <span class="val hl-gold" id="nm-res-grw-dec">+10.000000°</span>
+                    </div>
+                    <div class="converter-result-item">
+                        <span class="lbl">Greenwich-Koordinate (DMS):</span>
+                        <span class="val hl-gold" id="nm-res-grw-dms">10° 00' 00.00" E</span>
+                    </div>
+                    <div class="converter-result-item">
+                        <span class="lbl">Winkelzeit-Differenz zu Greenwich:</span>
+                        <span class="val hl-emerald" id="nm-res-grw-time">+00:40:00</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1627,6 +1774,52 @@ function updateGeneratorFromDecimal() {
 }
 
 /**
+ * 7b. NULLMERIDIAN-KONVERTER LOGIK (BIDIREKTIONAL)
+ */
+function normalizeLongitude(lon) {
+    let l = lon;
+    while (l > 180) l -= 360;
+    while (l < -180) l += 360;
+    return l;
+}
+
+function updateNullmeridianConverter() {
+    const refLon = parseFloat(document.getElementById('nm-ref-lon').value) || 0;
+    
+    // 1. Vorschau des Nullmeridians aktualisieren
+    const refDms = decimalToDMS(refLon);
+    document.getElementById('nm-ref-dms-preview').textContent = formatLongitude(refLon, 6) + ` (${refDms.formatted})`;
+
+    // 2. Richtung A: Greenwich -> Relativ zu Referenz
+    const grwInput = parseFloat(document.getElementById('nm-in-grw').value) || 0;
+    const grwInputDms = decimalToDMS(grwInput);
+    document.getElementById('nm-in-grw-dms-preview').textContent = `DMS: ${grwInputDms.formatted}`;
+
+    let relLon = normalizeLongitude(grwInput - refLon);
+    const relSign = relLon >= 0 ? "+" : "";
+    const relDms = decimalToDMS(relLon);
+    const relTimeMin = relLon * 4.0;
+
+    document.getElementById('nm-res-rel-dec').textContent = `${relSign}${relLon.toFixed(6)}°`;
+    document.getElementById('nm-res-rel-dms').textContent = relDms.formatted;
+    document.getElementById('nm-res-rel-time').textContent = formatDurationHms(relTimeMin);
+
+    // 3. Richtung B: Relativ zu Referenz -> Greenwich
+    const relInput = parseFloat(document.getElementById('nm-in-rel').value) || 0;
+    const relInputDms = decimalToDMS(relInput);
+    document.getElementById('nm-in-rel-dms-preview').textContent = `DMS: ${relInputDms.formatted}`;
+
+    let grwLon = normalizeLongitude(refLon + relInput);
+    const grwSign = grwLon >= 0 ? "+" : "";
+    const grwDms = decimalToDMS(grwLon);
+    const grwTimeMin = grwLon * 4.0;
+
+    document.getElementById('nm-res-grw-dec').textContent = `${grwSign}${grwLon.toFixed(6)}°`;
+    document.getElementById('nm-res-grw-dms').textContent = grwDms.formatted;
+    document.getElementById('nm-res-grw-time').textContent = formatDurationHms(grwTimeMin);
+}
+
+/**
  * 8. TABELLEN-RENDERING & INTERAKTIONEN (ERSATZLOS OHNE 'ALS EIGENER STANDORT')
  */
 function renderTable() {
@@ -2098,6 +2291,54 @@ function setupControls() {
         showToast(`Simulator-Referenz auf ${val.toFixed(7)}° gesetzt!`);
     };
 
+    // NULLMERIDIAN-KONVERTER EVENTS & SCHNELLWAHL
+    ['nm-ref-lon', 'nm-in-grw', 'nm-in-rel'].forEach(id => {
+        document.getElementById(id).addEventListener('input', updateNullmeridianConverter);
+    });
+
+    document.getElementById('btn-nm-set-greenwich').onclick = () => {
+        document.getElementById('nm-ref-lon').value = (0).toFixed(6);
+        updateNullmeridianConverter();
+        showToast("Nullmeridian auf Greenwich (0.000000°) gesetzt!");
+    };
+
+    document.getElementById('btn-nm-set-user').onclick = () => {
+        const userLon = parseFloat(document.getElementById('user-lon').value) || 0;
+        document.getElementById('nm-ref-lon').value = userLon.toFixed(6);
+        updateNullmeridianConverter();
+        showToast(`Nullmeridian auf eigenen Standort (${userLon.toFixed(6)}°) gesetzt!`);
+    };
+
+    document.getElementById('btn-nm-set-fav').onclick = () => {
+        const fav = locations.find(l => l.id === favoriteLocationId);
+        if (fav) {
+            document.getElementById('nm-ref-lon').value = fav.lon.toFixed(6);
+            updateNullmeridianConverter();
+            showToast(`Nullmeridian auf Favorit '${fav.name}' (${fav.lon.toFixed(6)}°) gesetzt!`);
+        } else {
+            showToast("Kein Favorit in der Tabelle markiert (Stern ★ anklicken)!");
+        }
+    };
+
+    document.getElementById('btn-copy-nm-ref').onclick = () => {
+        const val = `${parseFloat(document.getElementById('nm-ref-lon').value).toFixed(6)}°`;
+        navigator.clipboard.writeText(val).then(() => showToast(`Kopiert: ${val}`));
+    };
+
+    document.getElementById('btn-copy-nm-rel-result').onclick = () => {
+        const dec = document.getElementById('nm-res-rel-dec').textContent;
+        const dms = document.getElementById('nm-res-rel-dms').textContent;
+        const text = `${dec} (${dms})`;
+        navigator.clipboard.writeText(text).then(() => showToast(`Kopiert: ${text}`));
+    };
+
+    document.getElementById('btn-copy-nm-grw-result').onclick = () => {
+        const dec = document.getElementById('nm-res-grw-dec').textContent;
+        const dms = document.getElementById('nm-res-grw-dms').textContent;
+        const text = `${dec} (${dms})`;
+        navigator.clipboard.writeText(text).then(() => showToast(`Kopiert: ${text}`));
+    };
+
     // GPS Abfrage (6 Dezimalstellen)
     document.getElementById('btn-gps').onclick = () => {
         if ("geolocation" in navigator) {
@@ -2202,6 +2443,7 @@ window.addEventListener('DOMContentLoaded', () => {
     setupControls();
     loadState();
     updateGeneratorFromDMS();
+    updateNullmeridianConverter();
     renderTable();
     updateDynamicParamUI();
     buildRefTable();
